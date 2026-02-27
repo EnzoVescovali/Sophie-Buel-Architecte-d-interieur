@@ -186,3 +186,31 @@ footer nav ul {
 	margin: 2em
 }
 
+.categoriesFilter {
+	display: flex;
+	justify-content: center;
+	gap: 1rem;
+	margin-block-end: 2rem;
+
+	& button {
+		border: 1px solid #1D6154;
+		color: #1D6154;
+		background-color: white;
+		border-radius: 60px;
+		font-family: Syne;
+		font-size: 1rem;
+		padding: .5rem .8rem;
+		cursor: pointer;
+
+		&:hover {
+		color: #fff;
+		background-color: #1D6154;
+		color: #00b7e4;
+		}
+
+		&.color {
+		color: #fff;
+		background-color: #1D6154;			
+		}
+	}
+}
