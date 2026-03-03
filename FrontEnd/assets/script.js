@@ -46,7 +46,6 @@ function showCategories(categoriesData, works) {
       });
 
       showWorks(filteredWorks);
-
     })
   });
   
