@@ -19,14 +19,16 @@ const categories = document.createElement("div");
 categories.classList.add("categoriesFilter");
 gallery.before(categories);
 
-function showCategories(categoriesData) {
+function showCategories(categoriesData, works) {
   categories.innerHTML = "";
 
   const everythingBtn = document.createElement("button")
   everythingBtn.textContent = "Tous"
   categories.appendChild(everythingBtn)
 
-  
+  everythingBtn.addEventListener("click", function () {
+  showWorks(works);
+});
 
   categoriesData.forEach((element) => {
     const newCategory = document.createElement("button");
@@ -36,8 +38,15 @@ function showCategories(categoriesData) {
     everythingBtn.addEventListener("click", function (e) {
       everythingBtn.classList.toggle("color")
     })
+
     newCategory.addEventListener("click", function (e) {
-      newCategory.classList.toggle("color")
+      newCategory.classList.toggle("color");
+      const filteredWorks = works.filter(function (work) {
+        return work.categoryId === element.id;
+      });
+
+      showWorks(filteredWorks);
+
     })
   });
   
@@ -49,12 +58,12 @@ async function getInfo() {
     const categoriesRes = await fetch("http://localhost:5678/api/categories");
 
     const works = await worksRes.json();
-    const categoriesData = await categoriesRes.json(); // ✅ renommé
+    const categoriesData = await categoriesRes.json();
 
     console.log(works, categoriesData);
 
     showWorks(works);
-    showCategories(categoriesData); // ✅ on passe le bon truc
+    showCategories(categoriesData, works);
   } catch (error) {
     console.log("Something went wrong! Error details:" + error);
   }
