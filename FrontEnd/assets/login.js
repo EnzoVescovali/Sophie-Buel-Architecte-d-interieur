@@ -2,15 +2,17 @@ const form = document.querySelector(".loginForm")
 const emailInput = document.getElementById("mail")
 const passwordInput = document.getElementById("passW")
 
-async function loginInfo(email, password) {
+async function loginInfo() {
         const loginRes = await fetch ("http://localhost:5678/api/users/login", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email: emailInput.value.trim(), password: passwordInput.value, })
+            body: JSON.stringify({ 
+                email: emailInput.value.trim(), 
+                password: passwordInput.value, 
+            })
         })
         
         const login = await loginRes.json()
-
         console.log(login);
 
         if (loginRes.ok) {
@@ -25,8 +27,8 @@ async function loginInfo(email, password) {
 form.addEventListener("submit", async (e) => {
     e.preventDefault();
     try {
-    await loginInfo()
+        await loginInfo()
     } catch (error) {
-    console.log("Something went wrong! Error details:" + error);
+        console.log("Something went wrong! Error details:" + error);
     }   
 })
