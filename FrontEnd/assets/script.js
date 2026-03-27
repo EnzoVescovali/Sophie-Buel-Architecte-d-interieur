@@ -43,10 +43,20 @@ document.addEventListener("DOMContentLoaded", () => {
     wrap.classList.add("categoriesFilter")
     gallery.before(wrap)
 
+    const setActive = (btn) => {
+      wrap.querySelectorAll("button").forEach((b) => b.classList.remove("is-active"))
+      btn.classList.add("is-active")
+    }
+
     const allBtn = document.createElement("button")
     allBtn.textContent = "Tous"
     wrap.appendChild(allBtn)
-    allBtn.addEventListener("click", () => showWorks(cachedWorks))
+    setActive(allBtn)
+
+    allBtn.addEventListener("click", () => {
+      setActive(allBtn)
+      showWorks(cachedWorks)
+    })
 
     categories.forEach((cat) => {
       const btn = document.createElement("button")
@@ -54,6 +64,7 @@ document.addEventListener("DOMContentLoaded", () => {
       wrap.appendChild(btn)
 
       btn.addEventListener("click", () => {
+        setActive(btn)
         showWorks(cachedWorks.filter((w) => w.categoryId === cat.id))
       })
     })
@@ -308,57 +319,17 @@ document.addEventListener("DOMContentLoaded", () => {
   async function init() {
     try {
       await fetchWorks()
+      await fetchCategories()
 
       if (isLogged()) {
         enableAdminUI()
-        await fetchCategories()
-        return
+      } else {
+        showCategories(cachedCategories)
       }
-
-      await fetchCategories()
-      showCategories(cachedCategories)
     } catch (err) {
       console.log("Something went wrong! Error details:", err)
     }
   }
 
   init()
-})
-
-
-// login.js
-const form = document.querySelector(".loginForm")
-const emailInput = document.getElementById("mail")
-const passwordInput = document.getElementById("passW")
-
-async function loginInfo() {
-  const loginRes = await fetch("http://localhost:5678/api/users/login", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      email: emailInput.value.trim(),
-      password: passwordInput.value,
-    }),
-  })
-
-  const login = await loginRes.json()
-
-  if (loginRes.ok) {
-    const token = String(login.token || "").replace(/^Bearer\s+/i, "").replace(/"/g, "").trim()
-    localStorage.setItem("token", token)
-    if (login.userId) localStorage.setItem("userId", String(login.userId))
-    window.location.href = "index.html"
-  } else {
-    alert("Email ou mot de passe incorrect")
-    console.log("Erreur", login)
-  }
-}
-
-form.addEventListener("submit", async (e) => {
-  e.preventDefault()
-  try {
-    await loginInfo()
-  } catch (error) {
-    console.log("Something went wrong! Error details:" + error)
-  }
 })
