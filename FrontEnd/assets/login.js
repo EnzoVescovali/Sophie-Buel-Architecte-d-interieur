@@ -2,7 +2,28 @@ const form = document.querySelector(".loginForm")
 const emailInput = document.getElementById("mail")
 const passwordInput = document.getElementById("passW")
 
+function showError(message) {
+    let errorText = document.querySelector(".loginError")
+
+    if (!errorText) {
+        errorText = document.createElement("p")
+        errorText.classList.add("loginError")
+        form.appendChild(errorText)
+    }
+
+    errorText.textContent = message
+}
+
+
+function clearError() {
+    const errorText = document.querySelector(".loginError")
+    if (errorText) {
+        errorText.textContent = ""
+    }
+}
+
 async function loginInfo() {
+    clearError()
         const loginRes = await fetch ("http://localhost:5678/api/users/login", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -21,6 +42,7 @@ async function loginInfo() {
             window.location.href = "index.html";
         } else {
             console.log("Erreur", login);
+            showError("Email ou mot de passe incorrect.")
         }
 }
 
@@ -30,5 +52,6 @@ form.addEventListener("submit", async (e) => {
         await loginInfo()
     } catch (error) {
         console.log("Something went wrong! Error details:" + error);
+        showError("Une erreur est survenue, veuillez réessayer.")
     }   
 })
